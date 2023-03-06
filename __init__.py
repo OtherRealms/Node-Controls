@@ -28,7 +28,6 @@ bl_info = {
 import bpy
 from bpy.types import Panel, Operator
 from bpy.props import StringProperty, BoolProperty,EnumProperty, PointerProperty
-from inspect import getmembers
 
 
 def choose_name(node):
