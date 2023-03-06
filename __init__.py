@@ -43,6 +43,7 @@ def draw_nodes(self,context,layout,node_tree,external = 'space_data'):
 
     
     props = context.scene.control_panel_props
+
     row = layout.row()
     row.alignment = 'RIGHT'
     row.prop(props,'show_attributes')
@@ -51,6 +52,7 @@ def draw_nodes(self,context,layout,node_tree,external = 'space_data'):
     layout.use_property_decorate = False
 
     layout.prop(props,'sort_mode')
+    layout.use_property_decorate = True
 
 
     if not node_tree:
@@ -72,7 +74,8 @@ def draw_nodes(self,context,layout,node_tree,external = 'space_data'):
     for node,name in nodes:
         box = layout.box()
         row = box.row(align=False)
-        row.use_property_split = False
+        
+
         icon = 'NODE'
         if node.type == 'GROUP':
             icon = 'NODETREE'
@@ -105,51 +108,15 @@ def draw_nodes(self,context,layout,node_tree,external = 'space_data'):
         if node.mute:
             col.enabled = False
 
-        #OUTPUTS/SPECIAL----------------------------
-        
-        if node.type in ('VALUE','RGB'):
-            col.prop(node.outputs[0],'default_value',text = node.outputs[0].name)
-
-        elif node.type == 'UVMAP':
-            col.prop(node,'uv_map',text = 'UV Map')
-
-        elif node.type in ('MIX_RGB','MIX'):
-            row = col.row()
-            row.prop(node,'blend_type',text = " ")
-            row.label(text="",icon = 'OPTIONS')
-
-
-        elif node.type == 'VALTORGB':  
-
-            col.template_color_ramp(node,'color_ramp', expand=True)   
-
-        #ATTRIBUTES-------------------
         if props.show_attributes:
-
-            filter_str = ('bl_','__','show_','select','use','label',
-                        'color','parent','poll','update',
-                        'name','mute','hide','height','width','location',
-                        'tag','link','draw','view','factor_mode')
-            filter_words = ('dimensions','type')
-
-            #Filter 1-partial strings, 2-full words, 3-class types
-            m = list(filter(lambda m: not any(s in m[0] for s in filter_str),getmembers(node)))
-            m = list(filter(lambda m: not any(s in m[0] for s  in filter_words),m))
-
-            filter_vals = ('float','Vector','str','bool','Color','int','CompositorNodeRLayers','Scene')
-            m = list(filter(lambda m: any(s in type(m[1]).__name__ for s in filter_vals),m))
-
-            for prop in m:
-                n = prop[0].title().replace('_',' ')
-                row = col.row()
-                row.prop(node,prop[0],text = n)
-                row.label(text="",icon = 'OPTIONS')
-
-        #INPUTS-------------
+            node.draw_buttons(context,col)
+        
         for input in node.inputs:
             if input.is_unavailable or input.is_linked or input.type in ('SHADER'):
                 continue
+
             col.prop(input,'default_value',text = input.name)
+
 
 
 class CP_PT_ControlPanel3D(Panel):
@@ -362,7 +329,7 @@ class CP_Props(bpy.types.PropertyGroup):
         ("CUSTOM","Custom","Sort by custom order")
         )
     )
-    show_attributes : BoolProperty(default = True,name = "Display All Node Properites")
+    show_attributes : BoolProperty(default = True,name = "Display Node Properites")
 
 
 classes = [CP_OT_AddInput,CP_OT_RemoveInput,CP_OT_RemoveSelected,CP_OT_ChangeOrder,
