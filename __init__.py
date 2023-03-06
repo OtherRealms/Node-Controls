@@ -203,7 +203,7 @@ class CP_OT_AddInput(bpy.types.Operator):
 
         return {'FINISHED'}
 
-class CP_OT_RemoveInput(bpy.types.Operator):
+class CP_OT_RemoveInput(Operator):
     """Remove Input"""
     bl_idname = "cp.remove_input"
     bl_label = "Remove Node"
