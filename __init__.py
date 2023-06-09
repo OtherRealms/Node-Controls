@@ -135,7 +135,7 @@ class CP_PT_ControlPanel3D(Panel):
         row = layout.row()
         if props.node_type == 'MAT' and context.object:
             ob = context.object
-            if ob.type != 'MESH':
+            if ob.type not in ('MESH','CURVE'):
                 return 
             mat = ob.material_slots
 
