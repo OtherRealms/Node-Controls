@@ -7,3 +7,5 @@ Install Instructions:
 in GitHub , navigate to Code > Download .Zip . File will be named "Node-Controls-main.zip". Don't extract it, just use this zip to install in Blender > Preferences > Addons.
 
 Youtube: https://youtu.be/hp7Kcq4oGZ4
+
+![alt text](Screenshot.JPG)
