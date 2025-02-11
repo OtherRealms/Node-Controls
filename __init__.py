@@ -249,8 +249,18 @@ class CP_OT_ChangeOrder(Operator):
     direction_down : BoolProperty()
 
     def execute(self, context):
+        node = None
 
-        tree = context.scene.node_tree
+        if self.source == 'compositor':
+            tree = context.scene.node_tree
+        else:
+            if self.source == 'space_data':
+                tree = context.space_data.node_tree
+            else:
+                mat = bpy.data.materials[self.source]
+                tree = mat.node_tree
+
+
         node = tree.nodes.get(self.node)
 
         if not node:
