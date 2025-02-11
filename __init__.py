@@ -19,7 +19,7 @@ bl_info = {
     "author" : "Pablo Tochez Anderson",
     "description" : "",
     "blender" : (3, 4, 0),
-    "version" : (0, 0, 1),
+    "version" : (0, 0, 2),
     "location" : "",
     "warning" : "",
     "category" : "Interface"
@@ -173,7 +173,7 @@ class CP_PT_NodeGraphControls(Panel):
 
 
     
-class CP_OT_AddInput(bpy.types.Operator):
+class CP_OT_AddInput(Operator):
     """Add Input"""
     bl_idname = "cp.add_input"
     bl_label = "Add Node"
@@ -239,7 +239,7 @@ class CP_OT_RemoveInput(Operator):
 
         return {'FINISHED'}
     
-class CP_OT_ChangeOrder(bpy.types.Operator):
+class CP_OT_ChangeOrder(Operator):
     """Change Order"""
     bl_idname = "cp.change_order"
     bl_label = "Move"
@@ -249,17 +249,10 @@ class CP_OT_ChangeOrder(bpy.types.Operator):
     direction_down : BoolProperty()
 
     def execute(self, context):
-        node = None
 
-        if self.source != 'compositor':
-            if self.source == 'space_data':
-                tree = context.space_data.node_tree
-            else:
-                mat = bpy.data.materials[self.source]
-                tree = mat.node_tree
-            node = tree.nodes.get(self.node)
-        else:
-            tree = context.scene.node_tree
+        tree = context.scene.node_tree
+        node = tree.nodes.get(self.node)
+
         if not node:
             return {'FINISHED'}
         
@@ -284,14 +277,15 @@ class CP_OT_ChangeOrder(bpy.types.Operator):
                 if idx-1 > -1:
                     ctrl_nodes[idx-1]['CTRL'] =idx
                 node['CTRL'] = idx-1
-        except:
+        except Exception as err:
+            print(err)
             pass
         
 
 
         return {'FINISHED'}
     
-class CP_OT_RemoveSelected(bpy.types.Operator):
+class CP_OT_RemoveSelected(Operator):
     """Remove Input"""
     bl_idname = "cp.remove_selected"
     bl_label = "Remove Selected Nodes"
